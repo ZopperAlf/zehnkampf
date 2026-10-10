@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><title>Zehnkampf</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f6f4ef;--fg:#1d2433;--card:#fff;--ac:#d6361f;--mu:#6b7385;--bd:#e2ddd2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171f;--fg:#eceff5;--card:#1e232e;--mu:#98a1b5;--bd:#2f3646}}
+:root[data-theme="dark"]{--bg:#14171f;--fg:#eceff5;--card:#1e232e;--mu:#98a1b5;--bd:#2f3646}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;max-width:480px;margin:0 auto;padding:12px;box-sizing:border-box}
+h1{margin:8px 0 0;color:var(--ac);font-size:28px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.rule,.info{color:var(--mu);font-size:14px;margin:6px 0}
+.info b{color:var(--fg)}
+.h{font-size:22px;font-weight:700}.h small{color:var(--mu);font-weight:400;font-size:14px}
+.who{font-weight:700;font-size:18px;margin-top:6px}.who small{color:var(--mu);font-weight:400}
+button{display:block;width:100%;margin:8px 0;padding:14px;font-size:17px;font-weight:600;border:0;border-radius:12px;background:var(--ac);color:#fff}
+button.alt{background:var(--card);color:var(--fg);border:1px solid var(--bd)}
+button:disabled{opacity:.4}
+button.sq{width:56px;margin:0}
+.row{display:flex;gap:8px;align-items:center;justify-content:center}.row button{margin:6px 0}
+input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;font-size:16px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--fg)}
+.dice{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:12px 0;min-height:60px}
+.die{font-size:44px;line-height:1;width:54px;height:54px;border-radius:11px;border:2px solid var(--bd);background:var(--card);display:flex;align-items:center;justify-content:center;user-select:none}
+.die.f{border-color:var(--ac);background:rgba(214,54,31,.14)}
+.die.s{outline:3px solid #2a7de1}.die.x{opacity:.3}
+.chip{display:inline-block;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:2px 8px;margin:2px;font-size:15px}
+.bd{display:flex;gap:6px}.pc{flex:1;background:var(--card);border:2px solid var(--bd);border-radius:10px;padding:6px;text-align:center;font-size:13px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pc b{display:block;font-size:20px}.pc.on{border-color:var(--ac)}
+.res{text-align:center;font-size:18px;padding:10px;border-radius:10px;background:rgba(46,160,67,.15);margin:8px 0}
+.res.bad{background:rgba(214,54,31,.14)}.res b{display:block;font-size:26px}
+.cnt{min-width:100px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:4px;border-bottom:1px solid var(--bd);text-align:center}td:first-child,th:first-child{text-align:left}
+summary{cursor:pointer;color:var(--mu);margin:8px 0}
+.rk{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd);font-size:18px}
+.die{box-shadow:0 3px 0 var(--bd)}
+.roll{animation:roll .6s cubic-bezier(.2,.8,.3,1.2) both}
+@keyframes roll{0%{transform:rotate(-260deg) scale(.3) translateY(-40px);opacity:0}60%{transform:rotate(18deg) scale(1.15);opacity:1}100%{transform:none}}
+@keyframes bob{50%{transform:translateY(-8px)}}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+@keyframes rise{from{height:0;opacity:0}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.ban{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;color:#fff;background:linear-gradient(135deg,hsl(var(--hu) 70% 45%),hsl(calc(var(--hu) + 40) 70% 32%))}
+.ban .em{font-size:44px;animation:bob 1.6s ease-in-out infinite}.ban .h{color:#fff}.ban small{color:rgba(255,255,255,.85);font-size:13px}
+.prog{display:flex;justify-content:space-between;margin:6px 4px 8px;font-size:16px}.prog span{opacity:.3;filter:grayscale(1)}.prog .ok{opacity:1;filter:none}.prog .cur{opacity:1;filter:none;transform:scale(1.35)}
+.trophy{font-size:64px;text-align:center;animation:bob 1.4s ease-in-out infinite}.win{text-align:center;font-size:20px;margin:6px 0;animation:pop .6s both}
+.pod{display:flex;align-items:flex-end;justify-content:center;gap:6px;margin:16px 0}.col{flex:1;text-align:center;min-width:0}
+.nm{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pt{font-size:20px;font-weight:700;color:var(--ac)}
+.blk{border-radius:10px 10px 0 0;display:flex;justify-content:center;font-size:38px;padding-top:6px;box-sizing:border-box;animation:rise .9s ease-out both}
+.b0{background:linear-gradient(#ffd54a,#e0a800)}.b1{background:linear-gradient(#e3e6ec,#aab1bf)}.b2{background:linear-gradient(#e0a070,#b06a35)}
+.cf{position:fixed;inset:0;pointer-events:none;overflow:hidden}.cf i{position:absolute;top:-16px;width:9px;height:14px;animation:fall linear forwards}
+.row input{min-width:0;padding:10px 8px}.nm{white-space:normal;font-size:13px}
+.opt{display:flex;gap:10px;align-items:center;margin:10px 0;font-size:15px}.opt input{width:22px;height:22px;margin:0;flex:none}
+.stp{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.sc{font-size:12px;padding:3px 8px;border-radius:12px;border:1px solid var(--bd);color:var(--mu)}.sc.ok{border-color:#2ea043;color:var(--fg)}.sc.lose{border-color:var(--ac);color:var(--fg)}.sc.cur{background:var(--ac);border-color:var(--ac);color:#fff}
+.brk{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}.bcol{flex:0 0 140px;display:flex;flex-direction:column}.bt{font-size:12px;color:var(--mu);text-align:center;margin-bottom:4px}.bm{display:flex;flex-direction:column;justify-content:space-around;flex:1;gap:6px}
+.mb{border:1px solid var(--bd);border-radius:8px;background:var(--card);font-size:12px;overflow:hidden}.mr{display:flex;justify-content:space-between;gap:4px;padding:3px 6px}.mr span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.mr.w{font-weight:700;background:rgba(46,160,67,.18)}.mr.me{outline:2px solid var(--ac);outline-offset:-2px}
+.sl{margin:12px 0 4px;font-size:15px}.sl input{border:0;padding:0;margin:8px 0 0;background:none;accent-color:var(--ac)}
+</style></head><body><div id="app"></div>
+<script>
+const $=id=>document.getElementById(id),R=()=>1+Math.floor(Math.random()*6),G=['⚀','⚁','⚂','⚃','⚄','⚅'];
+const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const D=[
+{n:'100 Meter',t:'sets',k:4,c:2,neg:1,r:'2 Gruppen à 4 Würfel, zusammen 5 Neuwürfe. Hohe Augen sammeln, jede Sechs kostet 6 Punkte.'},
+{n:'Weitsprung',t:'lj',a:3,r:'Erst Anlauf (5 Würfel, beiseitegelegte Summe max. 8), dann Sprung mit diesen Würfeln und hohen Augen. 3 Versuche.'},
+{n:'Kugelstoßen',t:'sp',a:3,r:'Würfle einzeln, bis zu 8 Würfel, stoppe wann du willst. Eine 1 macht den Versuch ungültig. 3 Versuche.'},
+{n:'Hochsprung',t:'hj',r:'Latte ab 10, in Zweierschritten. Pro Höhe 3 Würfe mit 5 Würfeln, die Summe muss die Höhe erreichen.'},
+{n:'400 Meter',t:'sets',k:2,c:4,neg:1,r:'4 Paare, zusammen 5 Neuwürfe. Jede Sechs kostet 6 Punkte.'},
+{n:'110 Meter Hürden',t:'sets',k:5,c:1,neg:0,r:'5 Würfel, höchstens 5 Neuwürfe aller Würfel. Die Summe zählt.'},
+{n:'Diskus',t:'fz',nd:5,par:0,a:3,r:'5 Würfel, pro Wurf mindestens einen geraden behalten. Ohne geraden Würfel ungültig. 3 Versuche.'},
+{n:'Stabhochsprung',t:'pv',r:'Latte ab 10 in Zweierschritten. Würfelzahl (max. 8) selbst wählen: Summe ≥ Höhe und keine 1. 3 Würfe pro Höhe.'},
+{n:'Speerwurf',t:'fz',nd:6,par:1,a:3,r:'6 Würfel, pro Wurf mindestens einen ungeraden behalten. Ohne ungeraden Würfel ungültig. 3 Versuche.'},
+{n:'1500 Meter',t:'sets',k:1,c:8,neg:1,r:'8 Würfel einzeln, zusammen 5 Neuwürfe. Jede Sechs kostet 6 Punkte.'}];
+let RL=0;const _r0=render;render=function(){_r0();if(!['setup','hs','end'].includes(mode)&&!(mode=='kor'&&KO&&!KO.tie&&(!KO.win||KO.A.length==1)))$('app').insertAdjacentHTML('beforeend','<div id="gu" style="margin-top:24px">'+guHtml(0)+'</div>');if(RL){const ds=[...document.querySelectorAll('.dice .die:not(.f)')];(RL==2?ds.slice(-1):ds).forEach((e,i)=>{e.classList.add('roll');e.style.animationDelay=i*.06+'s'});RL=0}};
+let KO=0,OFF=0,NP=1,names=[],cpu=[],sty=[],P=[],S=[],d=0,q=[],qi=0,best=[],st={},J={},mode='setup',A=1;
+const tot=p=>S[p].reduce((a,b)=>a+(b||0),0),sum=a=>a.reduce((x,y)=>x+y,0);
+const sc=(a,neg)=>sum(a.map(v=>v==6&&neg?-6:v));
+const NAT=[
+{f:'🇩🇪',m:['Lukas','Jonas','Maximilian','Felix','Paul','Leon'],w:['Anna','Lena','Sophie','Marie','Laura','Hannah']},
+{f:'🇺🇸',m:['Jake','Tyler','Mike','Chris','Ryan','Brandon'],w:['Emily','Jessica','Ashley','Megan','Taylor','Sarah']},
+{f:'🇫🇷',m:['Louis','Hugo','Théo','Antoine','Mathis','Lucas'],w:['Camille','Léa','Chloé','Manon','Emma','Inès']},
+{f:'🇮🇹',m:['Marco','Luca','Matteo','Giovanni','Andrea','Paolo'],w:['Giulia','Sofia','Chiara','Francesca','Martina','Alice']},
+{f:'🇪🇸',m:['Carlos','Javier','Pablo','Diego','Álvaro','Sergio'],w:['Lucía','María','Carmen','Paula','Elena','Sara']},
+{f:'🇬🇧',m:['Oliver','Harry','George','Jack','Charlie','Tom'],w:['Olivia','Amelia','Isla','Poppy','Grace','Charlotte']},
+{f:'🇧🇷',m:['Pedro','Rafael','Thiago','Gabriel','Bruno','Mateus'],w:['Ana','Beatriz','Camila','Larissa','Juliana','Mariana']},
+{f:'🇯🇵',m:['Haruto','Ren','Takumi','Kenji','Sora','Yuki'],w:['Yui','Hana','Sakura','Aoi','Mei','Rin']},
+{f:'🇯🇲',m:['Marlon','Devon','Jerome','Omar','Kemar','Andre'],w:['Shelly','Tanya','Keisha','Alicia','Nia','Simone']},
+{f:'🇰🇪',m:['Brian','Kevin','Daniel','Eliud','Peter','Joseph'],w:['Faith','Mercy','Grace','Joyce','Esther','Beatrice']},
+{f:'🇸🇪',m:['Erik','Oskar','Lars','Axel','Henrik','Nils'],w:['Elsa','Astrid','Maja','Ebba','Linnea','Freja']},
+{f:'🇵🇱',m:['Jakub','Szymon','Michał','Piotr','Kacper','Tomasz'],w:['Zofia','Julia','Natalia','Kasia','Ola','Magda']},
+{f:'🇦🇺',m:['Liam','Noah','Mitch','Bailey','Lachlan','Cooper'],w:['Matilda','Chloe','Mia','Ruby','Zoe','Charli']},
+{f:'🇪🇺',m:['Start'],w:['Start']}];
+const LN=[
+['Müller','Schmidt','Schneider','Fischer','Weber','Wagner'],
+['Smith','Johnson','Miller','Davis','Wilson','Anderson'],
+['Martin','Bernard','Dubois','Moreau','Laurent','Simon'],
+['Rossi','Russo','Ferrari','Bianchi','Romano','Conti'],
+['García','Martínez','López','Sánchez','Fernández','Romero'],
+['Taylor','Jones','Davies','Evans','Walker','Wright'],
+['Silva','Santos','Oliveira','Souza','Costa','Pereira'],
+['Tanaka','Sato','Suzuki','Takahashi','Watanabe','Ito'],
+['Brown','Williams','Campbell','Thompson','Clarke','Reid'],
+['Kamau','Otieno','Mwangi','Kiptoo','Njoroge','Kimani'],
+['Andersson','Johansson','Karlsson','Nilsson','Eriksson','Larsson'],
+['Nowak','Kowalczyk','Mazur','Kaczmarek','Wójcik','Zając'],
+['Roberts','Walsh','Murray','Hughes','Kelly','Harris'],
+['Spieler']];
+let gen=0,nat=[],ed=[],lns=[];
+function pick(i){const L=NAT[nat[i]][gen?'w':'m'],used=names.filter((x,j)=>j!=i),f=L.filter(x=>!used.includes(x)),A=f.length?f:L;return A[Math.floor(Math.random()*A.length)]}
+function ini(){const EU=NAT.length-1,a=NAT.map((_,k)=>k).filter(k=>k!=EU).sort(()=>Math.random()-.5);names.length=0;lns.length=0;for(let i=0;i<4;i++){nat[i]=i?a[i-1]:EU;ed[i]=0;names[i]=pick(i);lns[i]=pl(i)}}
+function pl(i){const L=LN[nat[i]],f=L.filter(x=>!lns.some((y,j)=>j!=i&&y==x)),A=f.length?f:L;return A[Math.floor(Math.random()*A.length)]}
+function fn(i){return ((names[i]||'').trim()||'Spieler '+(i+1))+((lns[i]||'').trim()?' '+lns[i].trim():'')}
+function sn(i){return ((names[i]||'').trim()||'Spieler '+(i+1))+((lns[i]||'').trim()?' '+lns[i].trim()[0]+'.':'')}
+function natCh(i){grab();ed[i]=0;names[i]=pick(i);lns[i]=pl(i);render()}
+function setG(x){grab();gen=x;for(let i=0;i<4;i++)if(!ed[i])names[i]=pick(i);render()}
+function shuf(){grab();ini();render()}
+let O0=0,RD=0,RP=2,KN=16,HSc=0,LO=0,OFFd=-1,OFFo=[],ND=10,NDu=10;
+function guHtml(c){return c?`<div class="card"><b>Wirklich aufgeben?</b><div class="info">Das laufende Spiel wird beendet und nicht gewertet.</div><button onclick="guDo()">Ja, aufgeben</button><button class="alt" onclick="guAsk(0)">Weiter spielen</button></div>`:`<button class="alt" onclick="guAsk(1)">Aufgeben</button>`}
+function guAsk(c){$('gu').innerHTML=guHtml(c)}
+function guDo(){KO=0;OFF=0;LO=0;mode='setup';render()}
+function mkOrd(f=tot){if(KO)return P.map((_,i)=>i).sort((a,b)=>f(b)-f(a));let o=LO&&LO.length==P.length?[...LO]:P.map((_,i)=>i);if(RP==1)o.sort(()=>Math.random()-.5);else if(RP==2)o.sort((a,b)=>f(b)-f(a));LO=o;return o}
+function lsGet(k,d0){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d0}catch(e){return d0}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function saveP(){lsSet('zk_p',{names,lns,nat,ed,gen,NP,cpu,sty,RD,RP,KN,v:2})}
+function loadP(){const s=lsGet('zk_p',0);if(s&&s.nat&&s.nat.length>=4&&s.nat.every(x=>NAT[x])&&s.names&&s.lns){names=s.names;lns=s.lns;nat=s.nat;ed=s.ed||[0,0,0,0];gen=s.gen|0;cpu=s.cpu||[];sty=s.sty||[];RD=!!s.RD;RP=typeof s.RP=='number'?s.RP:2;KN=s.KN||16;if(!s.v){nat[0]=NAT.length-1;ed[0]=0;names[0]='Start';lns[0]='Spieler'}if(names[0]=='Euro'&&lns[0]=='Starter'){names[0]='Start';lns[0]='Spieler'}}else ini()}
+function saveHS(){const L=lsGet('zk_hs',[]);P.forEach((p,i)=>{if(!p.cpu&&ND==10)L.push({n:p.name,s:tot(i),m:OFF?'Tisch':'App',t:Date.now()})});L.sort((a,b)=>b.s-a.s);lsSet('zk_hs',L.slice(0,10))}
+function saveKO(){const k=KO,w=k.hist.filter(r=>r.some(m=>(m.a===0||m.b===0)&&m.w===0)).length,win=k.A.length==1&&k.A[0]===0;const L=lsGet('zk_ko',[]);L.push({n:k.F[0].name,z:k.F.length,w,win:win?1:0,t:Date.now()});L.sort((a,b)=>b.win-a.win||b.z-a.z||b.w-a.w);lsSet('zk_ko',L.slice(0,10))}
+function clrHS(){if(HSc){lsSet('zk_hs',[]);lsSet('zk_ko',[]);HSc=0}else HSc=1;render()}
+function hsScr(){const H=lsGet('zk_hs',[]),K=lsGet('zk_ko',[]),dt=t=>new Date(t).toLocaleDateString('de-DE'),sm=x=>`<small style="color:var(--mu)">${x}</small>`;
+ $('app').innerHTML=`<h1>🏅 Highscores</h1><div class="card"><b>Zehnkampf – beste Punktzahlen</b>`+(H.length?H.map((x,i)=>`<div class="rk"><span>${i+1}. ${E(x.n)} ${sm(x.m+' · '+dt(x.t))}</span><b>${x.s}</b></div>`).join(''):'<div class="info">Noch keine Einträge.</div>')+`</div><div class="card"><b>Knockout-Turniere</b>`+(K.length?K.map((x,i)=>`<div class="rk"><span>${i+1}. ${E(x.n)} ${sm(x.z+' Spieler · '+dt(x.t))}</span><b>${x.win?'🏆':x.w+' Siege'}</b></div>`).join(''):'<div class="info">Noch keine Einträge.</div>')+`</div><div class="info">Die Listen werden nur auf diesem Gerät gespeichert. Gewertet werden nur vollständige Zehnkämpfe mit 10 Disziplinen.</div><button class="alt" onclick="clrHS()">${HSc?'Wirklich löschen?':'Listen löschen'}</button><button onclick="HSc=0;mode='setup';render()">Zurück</button>`}
+function ordD(r){if(!O0)O0=[[...D],[...IC],[...FULL],[...MS]];const p=[0,1,2,3,4,5,6,7,8,9];if(r)p.sort(()=>Math.random()-.5);p.forEach((x,i)=>{D[i]=O0[0][x];IC[i]=O0[1][x];FULL[i]=O0[2][x];MS[i]=O0[3][x]})}
+function grab(){if($('rd')){RD=$('rd').checked;RP=+(document.querySelector('input[name=ro]:checked')||{value:RP}).value}for(let i=0;i<4;i++)if($('n'+i)){names[i]=$('n'+i).value;cpu[i]=$('c'+i).checked;sty[i]=+$('s'+i).value;nat[i]=+$('f'+i).value;lns[i]=$('l'+i).value}saveP()}
+function setN(n){grab();NP=n;render()}
+function startOff(){grab();P=[...Array(NP)].map((_,i)=>({name:NAT[nat[i]].f+' '+fn(i),short:NAT[nat[i]].f+' '+sn(i)}));ND=NDu;ordD(RD);LO=0;OFFd=-1;S=P.map(()=>[]);d=0;KO=0;OFF=1;mode='off';render()}
+function start(){KO=0;OFF=0;grab();P=[...Array(NP)].map((_,i)=>({name:NAT[nat[i]].f+' '+fn(i)+(cpu[i]?' 🤖':''),cpu:!!cpu[i],sty:sty[i]??1,short:NAT[nat[i]].f+' '+sn(i)+(cpu[i]?' 🤖':'')}));ND=NDu;ordD(RD);LO=0;S=P.map(()=>[]);d=0;mode='play';startDisc()}
+function startDisc(){const c=D[d],order=mkOrd();best=P.map(()=>0);
+ if(c.t=='hj'||c.t=='pv'){J={h:10,act:order,pos:0,ph:'choose',tries:0,n:5,last:null,msg:''};render();return}
+ A=c.a||1;q=[];for(let a=0;a<A;a++)order.forEach(p=>q.push([p,a]));qi=0;turn()}
+function turn(){if(qi>=q.length)return endDisc();const c=D[d];
+ if(c.t=='sets')st={set:0,fz:[],dice:[],re:5,th:0};
+ else if(c.t=='sp')st={v:[]};
+ else st={ph:'run',dice:[...Array(c.nd||5)].map(()=>({v:0,f:0})),sel:[],th:0};
+ if(P[q[qi][0]].cpu)return cpuTurn();
+ render()}
+function endDisc(){P.forEach((_,i)=>S[i][d]=best[i]);if(KO)return koDone();mode='disc';render()}
+const FULL=[
+`<b>Aufbau:</b> 8 Würfel, ein Versuch, aufgeteilt in zwei Gruppen à 4.<br><b>Ablauf:</b> Wirf eine Gruppe. Darf sie besser werden, nimmst du alle 4 Würfel wieder auf und wirfst sie komplett neu, bis du sie behältst. Danach kommt die zweite Gruppe. Für beide Gruppen zusammen hast du 5 Neuwürfe (laut mitzählen!).<br><b>Punkte:</b> Alle Augen zählen, nur Sechsen ziehen jeweils 6 Punkte ab. Gut sind also hohe Zahlen ohne Sechs.`,
+`<b>Aufbau:</b> 5 Würfel, 3 Versuche, zwei Phasen.<br><b>1. Anlauf:</b> Wirf alle 5, lege mindestens einen beiseite und wirf den Rest erneut. Jeder weitere Wurf bringt mindestens einen zusätzlichen Würfel beiseite. Die beiseitegelegten Würfel dürfen zusammen höchstens 8 ergeben, sonst ist der Versuch ungültig. Du kannst jederzeit abbrechen und springen. Je mehr Würfel du im Anlauf unterbringst, desto mehr darfst du im Sprung werfen.<br><b>2. Sprung:</b> Wirf genau diese Würfel, lege je Wurf mindestens einen beiseite und wirf den Rest neu, bis alle liegen. Hier sind hohe Zahlen gefragt.<br><b>Punkte:</b> Summe der Sprungwürfel.`,
+`<b>Aufbau:</b> bis zu 8 Würfel, 3 Versuche.<br><b>Ablauf:</b> Du wirfst einen Würfel nach dem anderen und entscheidest nach jedem Wurf, ob du weitermachst. Nach dem achten Würfel ist Schluss. Zeigt ein Würfel eine 1, ist der Versuch ungültig und bringt nichts.<br><b>Punkte:</b> Summe aller geworfenen Würfel.`,
+`<b>Aufbau:</b> 5 Würfel. Die Latte startet bei 10 und steigt in Zweierschritten.<br><b>Ablauf:</b> Wenn du dran bist, wählst du: Höhe auslassen oder versuchen. Beim Versuch hast du bis zu 3 Würfe hintereinander mit allen 5 Würfeln. Die Summe muss mindestens der Höhe entsprechen. Reißt du dreimal, bist du raus.<br><b>Punkte:</b> Die letzte Höhe, die du geschafft hast.`,
+`<b>Aufbau:</b> 8 Würfel in 4 Paaren, ein Versuch.<br><b>Ablauf:</b> Wie beim 100-Meter-Lauf, nur mit Paaren: Jedes Paar wird geworfen und darf komplett neu geworfen werden, bis du es behältst. Alle vier Paare zusammen haben 5 Neuwürfe.<br><b>Punkte:</b> Augen zählen, jede Sechs zieht 6 Punkte ab.`,
+`<b>Aufbau:</b> 5 Würfel, ein Versuch.<br><b>Ablauf:</b> Wirf alle Würfel. Passt dir das Ergebnis nicht, wirfst du alle 5 erneut, insgesamt höchstens 5-mal.<br><b>Punkte:</b> Summe aller Würfel, auch Sechsen zählen positiv.`,
+`<b>Aufbau:</b> 5 Würfel, 3 Versuche.<br><b>Ablauf:</b> Wirf alle und behalte mindestens einen geraden Würfel (2, 4 oder 6). Den Rest wirfst du neu und behältst wieder mindestens einen geraden. Du kannst jederzeit aufhören; sind alle 5 behalten, endet der Versuch von selbst. Zeigt ein Wurf keinen geraden Würfel mehr, ist der Versuch ungültig.<br><b>Punkte:</b> Summe der behaltenen Würfel.`,
+`<b>Aufbau:</b> bis zu 8 Würfel. Die Latte startet bei 10 und steigt in Zweierschritten.<br><b>Ablauf:</b> Pro Höhe wählst du: auslassen oder versuchen. Beim Versuch hast du 3 Würfe hintereinander. Vor jedem Wurf bestimmst du selbst, wie viele Würfel du nimmst. Der Sprung gelingt, wenn die Summe die Höhe erreicht und keine 1 dabei ist. Dreimal gerissen heißt ausgeschieden.<br><b>Punkte:</b> Die höchste geschaffte Höhe.`,
+`<b>Aufbau:</b> 6 Würfel, 3 Versuche.<br><b>Ablauf:</b> Wie beim Diskus, aber mit ungeraden Würfeln (1, 3, 5): Pro Wurf mindestens einen ungeraden behalten, den Rest neu werfen. Zeigt ein Wurf nur gerade Zahlen, ist der Versuch ungültig. Du kannst vorher jederzeit stoppen; liegen alle 6 fest, endet der Versuch.<br><b>Punkte:</b> Summe der behaltenen Würfel.`,
+`<b>Aufbau:</b> 8 Würfel, ein Versuch.<br><b>Ablauf:</b> Du gehst die Würfel einzeln durch: werfen, bei Bedarf neu werfen, dann behalten und zum nächsten. Über alle 8 Würfel hinweg hast du 5 Neuwürfe.<br><b>Punkte:</b> Augen zählen, jede Sechs zieht 6 Punkte ab.`];
+function offScr(){const c=D[d],att=c.a||1,jm=c.t=='hj'||c.t=='pv',pt=p=>tot(p)-(S[p][d]||0);
+ if(OFFd!==d){OFFo=mkOrd(pt);OFFd=d}const o=OFFo;
+ const proc=att>1?'Erst spielen alle Spieler Versuch 1, dann alle Versuch 2, dann Versuch 3.':jm?'Pro Höhe der Reihe nach: Jeder entscheidet, ob er springt oder auslässt. Wer springt, macht alle 3 Versuche am Stück.':'Jeder Spieler hat einen Versuch.';
+ let h=`${ban('am Tisch')}`+board(-1)
+ +`<div class="card"><b>Regeln</b><div style="font-size:15px;margin-top:6px">${FULL[d]}</div></div>`
+ +`<div class="card"><b>Reihenfolge</b><div class="info">${['Feste Reihenfolge wie eingetragen.','Reihenfolge für diese Disziplin ausgelost.',d?'Der Führende beginnt, bei Gleichstand gilt die Reihenfolge der letzten Disziplin.':'Erste Disziplin: Start in der eingetragenen Reihenfolge.'][RP]} ${proc}</div>`+o.map((p,k)=>`<span class="chip">${k+1}. ${E(P[p].name)}</span>`).join('')+'</div>'
+ +`<div class="card"><b>Ergebnisse eintragen</b><div class="info">${jm?'Höchste geschaffte Höhe (0 = keine).':att>1?'Punkte je Versuch. Ungültig = 0. Das beste Ergebnis zählt.':'Punkte laut Wertung. Ungültig = 0.'}</div>`;
+ o.forEach(p=>{h+=`<div class="who" style="font-size:16px">${E(P[p].name)}</div><div class="row">`;
+  for(let k=0;k<att;k++)h+=`<input id="o${p}_${k}" type="number" step="1" placeholder="${att>1?'V'+(k+1):'Punkte'}" ${att==1&&S[p][d]!==undefined?`value="${S[p][d]}"`:''}>`;
+  h+='</div>'});
+ $('app').innerHTML=h+`<button onclick="offSave()">Ergebnisse speichern</button></div>`+table()}
+function offSave(){const att=D[d].a||1;best=P.map((_,p)=>{let m=-99;for(let k=0;k<att;k++){const x=parseInt($('o'+p+'_'+k).value);m=Math.max(m,isNaN(x)?0:x)}return m});endDisc()}
+function corr(){mode='off';render()}
+const MS=[[18,4],[17,5],[20,4],[16,3],[17,3.5],[21,2.5],[14,4],[18,5],[15,4],[22,4]];
+const rname=n=>({2:'Finale',4:'Halbfinale',8:'Viertelfinale',16:'Achtelfinale',32:'Runde der 32',64:'Runde der 64'})[n]||'Runde';
+function sim(di,s){const m=MS[di],z=(Math.random()+Math.random()+Math.random()-1.5)*2;let r=Math.round(m[0]+(s-1)*.8+z*m[1]*[.8,1,1.25][s]);if(di==3||di==7)r=Math.round(r/2)*2;return Math.max(r,0)}
+function koStart(n){grab();ND=10;ordD(0);const g=gen?'w':'m',F=[{name:NAT[nat[0]].f+' '+fn(0),short:NAT[nat[0]].f+' '+sn(0)}],rd=k=>Math.floor(Math.random()*k);
+ for(let i=1;i<n;i++){const k=rd(NAT.length-1),a=NAT[k][g][rd(6)],l=LN[k][rd(6)];F.push({name:NAT[k].f+' '+a+' '+l,short:NAT[k].f+' '+a+' '+l[0]+'.',sty:rd(3)})}
+ KO={F,A:F.map((_,i)=>i).sort(()=>Math.random()-.5),r:0,hist:[],ds:[0,1,2,3,4,5,6,7,8,9].sort(()=>Math.random()-.5),log:[]};OFF=0;koRound()}
+function koRound(){const k=KO,op=k.F[k.A[k.A.indexOf(0)^1]];d=k.ds[k.r];
+ P=[{name:k.F[0].name,short:k.F[0].short,cpu:false,sty:1},{name:op.name,short:op.short,cpu:true,sty:op.sty}];S=P.map(()=>[]);mode='koi';render()}
+function koiScr(){const c=D[d];$('app').innerHTML=ban(rname(KO.A.length))+`<div class="card"><div class="info">Dein Gegner</div><div class="who">${E(P[1].name)}</div><div class="info">${['vorsichtig','ausgewogen','riskant'][P[1].sty]}er Typ · noch ${KO.A.length} Spieler im Turnier</div></div><div class="card"><b>${c.n}</b><div class="rule">${c.r}</div></div><button onclick="koGo()">Los geht's!</button>${tree()}`}
+function koGo(){mode='play';startDisc()}
+function koAdvance(win){const k=KO,A=k.A,N=[],R=[];for(let i=0;i<A.length;i+=2){const a=A[i],b=A[i+1];
+  if(a==0||b==0){const w=win?0:(a==0?b:a);N.push(w);R.push({a,b,sa:a==0?k.h:k.o,sb:a==0?k.o:k.h,w})}
+  else{const x=sim(k.ds[k.r],k.F[a].sty),y=sim(k.ds[k.r],k.F[b].sty);const w=x>y||(x==y&&Math.random()<.5)?a:b;N.push(w);R.push({a,b,sa:x,sb:y,w})}}
+ k.A=N;k.hist.push(R)}
+function koDone(){const k=KO,h=best[0],o=best[1];if(h==o){k.tie=1;mode='kor';return render()}
+ k.tie=0;k.h=h;k.o=o;k.win=h>o;k.nm=rname(k.A.length);k.log.push(`${k.nm} · ${D[d].n} ${h}:${o} gegen ${P[1].short} ${k.win?'✅':'❌'}`);
+ koAdvance(k.win);k.r++;if(!k.win)while(k.A.length>1){koAdvance(0);k.r++}if(!k.win||k.A.length==1)saveKO();
+ mode='kor';render()}
+function koNext(){koRound()}
+function mbox(m){const row=(i,s,w)=>`<div class="mr${w?' w':''}${i===0?' me':''}"><span>${i==null?'?':E(KO.F[i].short)}</span><b>${s??''}</b></div>`;return `<div class="mb">${row(m.a,m.sa,m.w!=null&&m.w===m.a)}${row(m.b,m.sb,m.w!=null&&m.w===m.b)}</div>`}
+function bracket(){const k=KO,n=k.F.length,R=Math.log2(n);let cols='';
+ for(let ri=0;ri<R;ri++){const mc=n/2**(ri+1);if(mc>8)continue;let ms;
+  if(k.hist[ri])ms=k.hist[ri];
+  else if(ri==k.hist.length){ms=[];for(let i=0;i<k.A.length;i+=2)ms.push({a:k.A[i],b:k.A[i+1]})}
+  else ms=[...Array(mc)].map(()=>({a:null,b:null}));
+  cols+=`<div class="bcol"><div class="bt">${rname(mc*2)}</div><div class="bm">${ms.map(mbox).join('')}</div></div>`}
+ return `<div class="brk">${cols}</div>`}
+function stepper(){const k=KO,n=k.F.length,R=Math.log2(n);let h='<div class="stp">';
+ for(let ri=0;ri<R;ri++){let c='',ic='○';const m=k.hist[ri]&&k.hist[ri].find(x=>x.a===0||x.b===0);
+  if(m){c=m.w===0?'ok':'lose';ic=m.w===0?'✅':'❌'}else if(ri==k.hist.length&&k.A.includes(0)){c='cur';ic='🎯'}else if(k.hist[ri]){c='skip';ic='–'}
+  h+=`<span class="sc ${c}">${ic} ${rname(n/2**ri)}</span>`}
+ return h+'</div>'}
+function tree(){return `<div class="card"><b>Turnierverlauf</b>${stepper()}${bracket()}</div>`}
+function korScr(){const k=KO,a=$('app'),h0=ban('Knockout'),lg=k.log.map(x=>`<div class="rk"><span style="font-size:14px">${E(x)}</span></div>`).join('');
+ if(k.tie){a.innerHTML=h0+`<div class="card"><div class="res bad">Unentschieden ${best[0]} : ${best[1]}<b>Stechen!</b></div></div><button onclick="koGo()">Stechen: ${D[d].n} nochmal</button>`;return}
+ if(k.win&&k.A.length==1){a.innerHTML=`<div class="trophy">🏆</div><h1 style="text-align:center">Turniersieger!</h1><div class="win"><b>${E(k.F[0].name)}</b> gewinnt das Turnier!</div>${tree()}<div class="card">${lg}</div><button onclick="mode='setup';KO=0;render()">Neues Spiel</button>`;confetti();return}
+ if(k.win){a.innerHTML=h0+`<div class="card"><div class="res">${k.nm}: ${k.h} : ${k.o}<b>Du bist weiter!</b></div><div class="info">Nächste Runde: ${rname(k.A.length)} · ${D[k.ds[k.r]].n} · noch ${k.A.length} Spieler</div></div><button onclick="koNext()">Nächste Runde</button>${tree()}<div class="card">${lg}</div>`;return}
+ a.innerHTML=h0+`<div class="card"><div class="res bad">${k.nm}: ${k.h} : ${k.o}<b>Ausgeschieden</b></div><div class="info">Turniersieger: <b>${E(k.F[k.A[0]].name)}</b></div></div>${tree()}<div class="card">${lg}</div><button onclick="mode='setup';KO=0;render()">Neues Spiel</button>`}
+const IC=['🏃','🦘','⚫','🤸','💨','🚧','🥏','🪄','🏹','🏅'];
+function ban(s){const c=D[d];return `<div class="ban" style="--hu:${d*36}"><span class="em">${IC[d]}</span><div><div class="h">${c.n}</div><small>${KO?(s||''):'Disziplin '+(d+1)+'/'+ND+(s?' · '+s:'')}</small></div></div><div class="prog">${IC.slice(0,KO?10:ND).map((e,i)=>`<span class="${(KO?KO.ds.slice(0,KO.r).includes(i):i<d)?'ok':i==d?'cur':''}">${e}</span>`).join('')}</div>`}
+function confetti(){const e=document.createElement('div');e.className='cf';for(let i=0;i<45;i++){const s=document.createElement('i');s.style.cssText=`left:${Math.random()*100}%;background:hsl(${Math.random()*360},80%,55%);animation-delay:${Math.random()*2}s;animation-duration:${2.5+Math.random()*2}s`;e.appendChild(s)}document.body.appendChild(e);setTimeout(()=>e.remove(),6500)}
+function endScr(){const o=P.map((_,i)=>i).sort((x,y)=>tot(y)-tot(x)),rk=o.map(i=>o.filter(j=>tot(j)>tot(i)).length),med=['🥇','🥈','🥉'],ht=[150,110,80];
+ const top=o.slice(0,3),dp=top.length==3?[1,0,2]:top.length==2?[1,0]:[0];
+ const w=o.filter((_,k)=>rk[k]==0).map(i=>E(P[i].name)).join(' & ');
+ let h=`<div class="trophy">🏆</div><h1 style="text-align:center">Siegerehrung</h1><div class="win"><b>${w}</b> ${w.includes(' & ')?'teilen sich den Sieg!':'gewinnt!'}</div><div class="pod">`+dp.map(k=>{const i=top[k],r=Math.min(rk[k],2);return `<div class="col"><div class="nm">${E(P[i].name)}</div><div class="pt">${tot(i)}</div><div class="blk b${r}" style="height:${ht[r]}px"><span>${med[r]}</span></div></div>`}).join('')+'</div>';
+ if(o.length>3)h+='<div class="card">'+o.slice(3).map((i,k)=>`<div class="rk"><span>${rk[k+3]+1}. ${E(P[i].name)}</span><b>${tot(i)}</b></div>`).join('')+'</div>';
+ $('app').innerHTML=h+table()+`<button onclick="mode='setup';render()">Neues Spiel</button>`;confetti()}
+function nextD(){d++;if(d>=ND){mode='end';saveHS();render()}else if(OFF){mode='off';render()}else{mode='play';startDisc()}}
+function done(v,msg){best[q[qi][0]]=Math.max(best[q[qi][0]],v);st.res={v,msg};render()}
+function nx(){qi++;turn()}
+function cpuJ(){RL=1;const j=J,p=j.act[j.pos],pv=D[d].t=='pv';let ok=0,s=0,dc=[],n=5,used=0;
+ for(let t=0;t<3&&!ok;t++){
+  if(pv){let bp=-1;for(let k=1;k<=8;k++){let w=0;for(let i=0;i<300;i++){const x=[...Array(k)].map(R);if(sum(x)>=j.h&&!x.includes(1))w++}if(w>bp){bp=w;n=k}}}
+  dc=[...Array(n)].map(R);s=sum(dc);ok=s>=j.h&&!(pv&&dc.includes(1));used++}
+ j.last=dc;j.sum=s;j.ph='res';j.ok=ok;j.out=!ok;if(ok)best[p]=j.h;
+ j.msg=ok?`Geschafft im ${used}. Versuch (${s} ≥ ${j.h})`:`Höhe ${j.h} dreimal gerissen – ausgeschieden`}
+function cpuTurn(){RL=1;const c=D[d],t=c.t,s=P[q[qi][0]].sty;let v=0,msg='',h='';
+ const dd=a=>'<div class="dice">'+a.map(x=>`<div class="die">${G[x-1]}</div>`).join('')+'</div>';
+ if(t=='sets'){let re=5;const fz=[];
+  for(let k=0;k<c.c;k++){let dc;
+   for(;;){dc=[...Array(c.k)].map(R);const val=sc(dc,c.neg),six=c.neg&&dc.includes(6);
+    if(re<=0)break;
+    if(six||(val<c.k*(c.neg?[3,3.5,4][s]:[3.3,3.8,4.3][s])&&(c.c<3||re>(c.c-k-1)/2))){re--;continue}
+    break}
+   fz.push(dc)}
+  v=sum(fz.map(a=>sc(a,c.neg)));h=fz.map(x=>`<span class="chip">${x.map(y=>G[y-1]).join('')} = ${sc(x,c.neg)}</span>`).join('');msg=`${5-re} Neuwürfe genutzt`}
+ else if(t=='sp'){const a=[];let bust=0;
+  while(a.length<8){const x=R();a.push(x);if(x==1){bust=1;break}if(sum(a)>=[14,20,26][s])break}
+  v=bust?0:sum(a);h=dd(a);msg=bust?'Eine 1 – ungültig':''}
+ else if(t=='fz'){const par=c.par;let un=c.nd,bad=0;const fr=[];
+  for(;;){const dc=[...Array(un)].map(R),ok=dc.filter(x=>x%2==par).sort((a,b)=>b-a);
+   if(!ok.length){bad=1;break}
+   let tk=ok.filter(x=>x>=[2,4,5][s]);if(!tk.length)tk=[ok[0]];
+   fr.push(...tk);un-=tk.length;if(un<=2-s)break}
+  v=bad?0:sum(fr);h=dd(fr);msg=bad?'Kein '+(par?'ungerader':'gerader')+' Würfel – ungültig':''}
+ else{let un=5,bad=0;const fr=[];
+  for(let it=0;it<6&&un>0;it++){const dc=[...Array(un)].map(R).sort((a,b)=>a-b),sm=sum(fr);
+   if(sm+dc[0]>8){bad=1;fr.push(dc[0]);break}
+   const tk=[dc[0]];for(let i=1;i<dc.length;i++)if(dc[i]<=2&&sm+sum(tk)+dc[i]<=8)tk.push(dc[i]);
+   fr.push(...tk);un-=tk.length;const s2=sum(fr),n=fr.length;
+   if(n>=[3,4,5][s]||(s<2&&((8-s2<=1&&n>=2)||(8-s2<=2&&n>=3))))break}
+  const jf=[];
+  if(!bad){let jd=fr.length;while(jd>0){const dc=[...Array(jd)].map(R).sort((a,b)=>b-a);let tk=dc.filter(x=>x>=[3,4,5][s]);if(!tk.length)tk=[dc[0]];jf.push(...tk);jd-=tk.length}}
+  v=bad?0:sum(jf);h=`<div class="info">Anlauf: ${sum(fr)} mit ${fr.length} Würfeln${bad?' – übergetreten':''}</div>`+(bad?'':dd(jf));msg=bad?'Übergetreten – ungültig':''}
+ st.cpu=h;done(v,msg)}
+/* Sets */
+function seRoll(){RL=1;const c=D[d];st.dice=[...Array(c.k)].map(R);st.th=1;render()}
+function seRe(){st.re--;seRoll()}
+function seKeep(){const c=D[d];st.fz.push(st.dice);if(st.set+1==c.c){const t=sum(st.fz.map(a=>sc(a,c.neg)));done(t,'')}else{st.set++;st.th=0;st.dice=[];render()}}
+function rSE(){const c=D[d],s=st;
+ let h=`<div class="info">Satz ${Math.min(s.set+1,c.c)}/${c.c} · Neuwürfe übrig: <b>${s.re}</b></div><div>`+s.fz.map(x=>`<span class="chip">${x.map(v=>G[v-1]).join('')} = ${sc(x,c.neg)}</span>`).join('')+'</div>';
+ if(!st.res)h+=`<div class="dice">`+(s.th?s.dice.map(v=>`<div class="die${v==6&&c.neg?' x':''}">${G[v-1]}</div>`).join(''):'')+'</div>';
+ let ct=!s.th?`<button onclick="seRoll()">Würfeln</button>`:`<button onclick="seKeep()">Behalten (${sc(s.dice,c.neg)})</button>`+(s.re>0?`<button class="alt" onclick="seRe()">Neu würfeln</button>`:'');
+ return [h,ct]}
+/* Shot put */
+function spRoll(){RL=2;const v=R();st.v.push(v);if(v==1)return done(0,'Eine 1 – ungültig');if(st.v.length==8)return done(sum(st.v),'Alle 8 Würfel geworfen');render()}
+function spStop(){done(sum(st.v),'')}
+function rSP(){const s=st;let h=`<div class="info">Würfel ${s.v.length}/8 · Summe <b>${s.v.some(v=>v==1)?0:sum(s.v)}</b></div><div class="dice">`+s.v.map(v=>`<div class="die${v==1?' x':''}">${G[v-1]}</div>`).join('')+'</div>';
+ let ct=`<button onclick="spRoll()">Werfen</button>`+(s.v.length?`<button class="alt" onclick="spStop()">Stopp (${sum(s.v)})</button>`:'');
+ return [h,ct]}
+/* Freeze games: long jump, discus, javelin */
+function tg(i){if(st.res||!st.th)return;const x=st.dice[i],c=D[d];if(x.f)return;if(c.t=='fz'&&x.v%2!=c.par)return;const k=st.sel.indexOf(i);k<0?st.sel.push(i):st.sel.splice(k,1);render()}
+function fzRoll(){RL=1;const c=D[d],s=st;s.dice.forEach(x=>{if(!x.f)x.v=R()});s.th=1;s.sel=[];
+ if(c.t=='fz'&&!s.dice.some(x=>!x.f&&x.v%2==c.par))return done(0,'Kein '+(c.par?'ungerader':'gerader')+' Würfel mehr – ungültig');render()}
+function fzGo(stop){const c=D[d],s=st;if(!s.sel.length)return;s.sel.forEach(i=>s.dice[i].f=1);s.sel=[];
+ const fr=s.dice.filter(x=>x.f),t=sum(fr.map(x=>x.v)),all=fr.length==s.dice.length;
+ if(c.t=='lj'&&s.ph=='run'){if(t>8)return done(0,'Übergetreten (Summe '+t+' > 8) – ungültig');
+  if(all||stop){s.ph='jump';s.run=t;s.dice=fr.map(()=>({v:0,f:0}));s.th=0;return render()}return fzRoll()}
+ if(all||stop)return done(t,'');fzRoll()}
+function rFZ(){const c=D[d],s=st,t=c.t,fr=s.dice.filter(x=>x.f),sm=sum(fr.map(x=>x.v)),un=s.dice.length-fr.length;
+ const lab=t=='lj'?(s.ph=='run'?`Anlauf · festgehalten: <b>${sm}</b> (max. 8)`:`Sprung mit ${s.dice.length} Würfeln · Anlauf ${s.run}`):`Festgehalten: <b>${sm}</b>`;
+ const dh=s.dice.map((x,i)=>{const bad=t=='fz'&&!x.f&&s.th&&x.v%2!=c.par;return `<div class="die${x.f?' f':''}${s.sel.includes(i)?' s':''}${bad?' x':''}" onclick="tg(${i})">${x.v?G[x.v-1]:'?'}</div>`}).join('');
+ let ct;
+ if(!s.th)ct=`<button onclick="fzRoll()">${s.ph=='jump'?'Springen!':'Würfeln'}</button>`;
+ else{const n=s.sel.length,rest=un-n,sb=t=='fz'||s.ph=='run';
+  ct=`<div class="info">Tippe Würfel zum Festhalten an (${n} gewählt)</div>`;
+  if(rest>0)ct+=`<button ${n?'':'disabled'} onclick="fzGo()">Festhalten &amp; weiterwürfeln</button>`;
+  if(rest==0||sb)ct+=`<button class="${rest>0?'alt':''}" ${n?'':'disabled'} onclick="fzGo(1)">${rest==0?'Festhalten':(t=='lj'?'Festhalten & Absprung':'Festhalten & Stopp')}</button>`}
+ return [`<div class="info">${lab}</div><div class="dice">${dh}</div>`,ct]}
+/* High jump / pole vault */
+const MAXH={hj:30,pv:48};
+function adv(rm){const j=J;j.last=null;j.msg='';j.tries=0;if(rm)j.act.splice(j.pos,1);else j.pos++;
+ if(j.pos>=j.act.length){j.h+=2;j.pos=0}
+ if(!j.act.length||j.h>MAXH[D[d].t])return endDisc();j.ph='choose';render()}
+function jc(a){if(a==1){J.ph='jump';J.tries=0;J.last=null;J.msg='';render()}else if(a==0)adv(false);else adv(true)}
+function jn(x){J.n=Math.max(1,Math.min(8,J.n+x));render()}
+function jr(){RL=1;const j=J,p=j.act[j.pos],pv=D[d].t=='pv',n=pv?j.n:5;
+ const dc=[...Array(n)].map(R),s=sum(dc),one=pv&&dc.includes(1);j.last=dc;j.sum=s;
+ if(s>=j.h&&!one){best[p]=j.h;j.ph='res';j.ok=1;j.out=0;j.msg='Geschafft! '+s+' ≥ '+j.h}
+ else{j.tries++;if(j.tries>=3){j.ph='res';j.ok=0;j.out=1;j.msg='Höhe '+j.h+' dreimal gerissen – ausgeschieden'}else j.msg='Fehlversuch ('+(one?'eine 1':s+' < '+j.h)+')'}
+ render()}
+function jx(){adv(J.out)}
+function rJ(){const j=J,pv=D[d].t=='pv';let dh=`<div class="info">Höhe <b>${j.h}</b>${j.ph=='jump'?` · Versuch ${j.tries+1}/3`:''}</div>`,ct='';
+ if(j.last)dh+=`<div class="dice">`+j.last.map(v=>`<div class="die${pv&&v==1?' x':''}">${G[v-1]}</div>`).join('')+`</div><div class="info">Summe <b>${j.sum}</b></div>`;
+ if(j.ph=='choose')ct=`<button onclick="jc(1)">Höhe ${j.h} springen</button><button class="alt" onclick="jc(0)">Auslassen</button><button class="alt" onclick="jc(2)">Ausscheiden (Ergebnis behalten)</button>`;
+ else if(j.ph=='jump'){if(pv)ct+=`<div class="row"><button class="alt sq" onclick="jn(-1)">−</button><b class="cnt">${j.n} Würfel</b><button class="alt sq" onclick="jn(1)">+</button></div>`;
+  ct+=(j.msg?`<div class="res bad">${j.msg}</div>`:'')+`<button onclick="jr()">Würfeln</button>`}
+ else ct=`<div class="res ${j.ok?'':'bad'}">${j.msg}</div><button onclick="jx()">Weiter</button>`;
+ return [dh,ct]}
+/* Rendering */
+function board(cp){return '<div class="bd">'+P.map((x,i)=>`<div class="pc${i==cp?' on':''}"><span>${E(x.short||x.name)}</span><b>${tot(i)}</b></div>`).join('')+'</div>'}
+function guide(){return `<details><summary>Kurzanleitung</summary><div class="card" style="font-size:14px"><b>Ziel:</b> In den gewählten Disziplinen (Standard: alle 10) möglichst viele Punkte sammeln. Wer nach der letzten die meisten hat, gewinnt.<br><br><b>Ablauf:</b> Die Disziplinen sind unabhängig. Ab der zweiten beginnt der aktuell Führende. Bei mehreren Versuchen kommen erst alle Spieler mit Versuch 1 dran, dann mit Versuch 2 usw. Gewertet wird das beste Ergebnis.<br><br><b>Optionen:</b> „Disziplinen in zufälliger Reihenfolge“ mischt die zehn Disziplinen. Bei der Spielerreihenfolge gilt: „Spitzenreiter startet zuerst“ (Standard) lässt den Punktbesten beginnen, bei Gleichstand bleibt die Reihenfolge der letzten Disziplin. „Jede Runde auslosen“ würfelt die Reihenfolge in jeder Disziplin neu, „Feste Reihenfolge“ bleibt wie eingetragen. Das gilt für normale Spiele und den Tisch-Modus. Im Knockout sind die Disziplinen immer zufällig.<br><br><b>Knockout:</b> 16, 32 oder 64 Spieler, nur mit Spieler 1. In jeder Runde gilt eine zufällige Disziplin. Du trittst gegen einen Computer-Gegner an, wer mehr Punkte hat, kommt weiter. Bei Gleichstand gibt es ein Stechen. Die anderen Duelle werden simuliert.<br><br><b>Spieler:</b> Jeder bekommt zufällig eine Nation (Flagge) und einen typischen Vor- und Nachnamen; ♂/♀ gilt für alle. Flagge und Name könnt ihr jederzeit ändern, 🎲 mischt neu.<br><br><b>Am Tisch:</b> Mit „Am Tisch spielen“ ist die App nur Begleiter: Sie zeigt Regeln und Reihenfolge, ihr würfelt echt und tragt die Punkte selbst ein.<br><br><b>Computer:</b> Aktiviere beim Start bei einem Spieler die Option 🤖. Der Computer würfelt dann automatisch, du siehst sein Ergebnis und tippst auf <i>Weiter</i>. Charakter: <i>vorsichtig</i> nimmt sichere Ergebnisse früh mit, <i>riskant</i> geht auf Höchstwerte und riskiert ungültige Versuche, <i>ausgewogen</i> liegt dazwischen.<br><br><b>Bedienung:</b> Mit <i>Würfeln</i> wirfst du. Beim Festhalten tippst du die gewünschten Würfel an (blau markiert) und bestätigst. Festgehaltene Würfel sind rot umrandet, abgeblasste Würfel sind nicht erlaubt.<br><br><b>Laufdisziplinen (100 m, 400 m, 1500 m, Hürden):</b> Würfel in Sätzen werfen, jeden Satz mit <i>Behalten</i> festlegen oder neu würfeln (insgesamt 5 Neuwürfe). Sechsen zählen minus 6, nur bei den Hürden normal.<br><br><b>Weitsprung:</b> Anlauf mit 5 Würfeln, Festhaltesumme max. 8, sonst ungültig. Danach springst du mit den festgehaltenen Würfeln und willst hohe Werte.<br><br><b>Kugelstoßen:</b> Bis zu 8 Würfel nacheinander, jederzeit Stopp. Eine 1 = ungültig.<br><br><b>Diskus / Speer:</b> Pro Wurf mind. 1 Würfel festhalten, Diskus nur gerade, Speer nur ungerade. Gibt es keinen erlaubten Würfel, ist der Versuch ungültig.<br><br><b>Hoch- / Stabhochsprung:</b> Start bei 10, Schritte von 2. Pro Höhe springen oder auslassen, 3 Versuche. Hochsprung: 5 Würfel, Summe ≥ Höhe. Stabhochsprung: Würfelzahl frei wählbar (max. 8), Summe ≥ Höhe und keine 1. Dreimal gerissen = ausgeschieden.</div></details>`}
+function table(){return guide()+`<details><summary>Punktetabelle</summary><table><tr><th></th>${P.map(x=>`<th>${E(x.name)}</th>`).join('')}</tr>`+D.slice(0,ND).map((c,r)=>`<tr><td>${c.n}</td>${P.map((_,i)=>`<td>${S[i][r]??'–'}</td>`).join('')}</tr>`).join('')+`<tr><td><b>Summe</b></td>${P.map((_,i)=>`<td><b>${tot(i)}</b></td>`).join('')}</tr></table></details>`}
+function render(){const a=$('app');
+ if(mode=='setup'){if(!nat.length)loadP();saveP();let h=`<h1>Zehnkampf</h1><div class="rule">Würfelspiel angelehnt an Zehnkampf von Reiner Knizia</div><div class="card"><b>Spieleranzahl</b><div class="row">`+[1,2,3,4].map(n=>`<button class="${n==NP?'':'alt'}" onclick="setN(${n})">${n}</button>`).join('')+'</div>';
+  h+=`<div class="row"><button class="${gen==0?'':'alt'}" onclick="setG(0)">♂ Männlich</button><button class="${gen==1?'':'alt'}" onclick="setG(1)">♀ Weiblich</button><button class="alt sq" onclick="shuf()">🎲</button></div>`;for(let i=0;i<NP;i++)h+=`<div class="row"><select id="f${i}" onchange="natCh(${i})" style="flex:0 0 auto;font-size:22px;padding:6px 2px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--fg)">${NAT.map((n,k)=>`<option value="${k}"${nat[i]==k?' selected':''}>${n.f}</option>`).join('')}</select><input id="n${i}" placeholder="Vorname" oninput="ed[${i}]=1" maxlength="14" value="${E(names[i]||'Spieler '+(i+1))}"><input id="l${i}" placeholder="Nachname" oninput="ed[${i}]=1" maxlength="14" value="${E(lns[i]||'')}"><label style="white-space:nowrap;font-size:14px">🤖 <input type="checkbox" id="c${i}" onchange="$('s${i}').style.display=this.checked?'':'none'" ${cpu[i]?'checked':''} style="width:22px;height:22px;margin:0;vertical-align:middle"></label></div><select id="s${i}" style="${cpu[i]?'':'display:none;'}width:100%;padding:8px;margin:0 0 8px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--fg);font-size:14px">${['vorsichtig','ausgewogen','riskant'].map((n,k)=>`<option value="${k}"${(sty[i]??1)==k?' selected':''}>Computer-Charakter: ${n}</option>`).join('')}</select>`;
+  a.innerHTML=h+`<label class="opt"><input type="checkbox" id="rd" ${RD?'checked':''}> Disziplinen in zufälliger Reihenfolge</label><div class="rule" style="margin:10px 0 0">Spielerreihenfolge</div><label class="opt"><input type="radio" name="ro" value="2" ${RP==2?'checked':''}> Spitzenreiter startet zuerst</label><label class="opt"><input type="radio" name="ro" value="1" ${RP==1?'checked':''}> Spielerreihenfolge jede Runde auslosen</label><label class="opt"><input type="radio" name="ro" value="0" ${RP==0?'checked':''}> Feste Reihenfolge (wie eingetragen)</label><button onclick="start()">Spiel starten (App würfelt)</button><div class="sl"><label for="nd">Anzahl Disziplinen: <b id="ndv">${NDu}</b></label><input type="range" id="nd" min="1" max="10" value="${NDu}" oninput="NDu=+this.value;$('ndv').textContent=NDu"></div><button onclick="koStart(KN)" style="margin-top:16px">🏆 Knockout-Turnier starten</button><div class="rule" style="margin:0"><b>Teilnehmer</b> (nur Spieler 1, gegen Computer):</div><div class="row">${[16,32,64].map(n=>`<button class="${KN==n?'':'alt'}" onclick="grab();KN=${n};render()">${n}</button>`).join('')}</div><button class="alt" style="margin-top:16px" onclick="startOff()">Am Tisch spielen (echte Würfel)</button><div class="rule">Am Tisch: Die App zeigt Regeln und Reihenfolge, ihr würfelt selbst und tragt die Punkte ein.</div></div><button class="alt" onclick="mode='hs';render()">🏅 Highscores</button>`+guide()+`<div class="info" style="margin-top:18px;text-align:center">Inoffizielle Fan-Umsetzung, angelehnt an „Zehnkampf“ von Dr. Reiner Knizia (knizia.de). Nicht von ihm autorisiert; die Regeln sind frei nacherzählt.</div>`;return}
+ if(mode=='hs')return hsScr();if(mode=='koi')return koiScr();if(mode=='kor')return korScr();
+ if(mode=='off')return offScr();
+ if(mode=='disc'){const o=P.map((_,i)=>i).sort((x,y)=>best[y]-best[x]);
+  a.innerHTML=`${ban('Ergebnis')}`+board(-1)+`<div class="card">`+o.map(i=>`<div class="rk"><span>${E(P[i].name)}</span><b>${best[i]}</b></div>`).join('')+`</div><button onclick="nextD()">${d==ND-1?'Endergebnis':'Nächste Disziplin'}</button>${OFF?'<button class="alt" onclick="corr()">Eingabe korrigieren</button>':''}`+table();return}
+ if(mode=='end')return endScr();
+ if(0){const o=P.map((_,i)=>i).sort((x,y)=>tot(y)-tot(x));
+  a.innerHTML=`<h1>Endergebnis</h1><div class="card">`+o.map((i,k)=>`<div class="rk"><span>${['🥇','🥈','🥉','4.'][k]} ${E(P[i].name)}</span><b>${tot(i)}</b></div>`).join('')+`</div>`+table()+`<button onclick="mode='setup';render()">Neues Spiel</button>`;return}
+ const c=D[d],jm=c.t=='hj'||c.t=='pv',p=jm?J.act[J.pos]:q[qi][0];let dh,ct;
+ if(jm){if(P[p].cpu&&J.ph=='choose')cpuJ();[dh,ct]=rJ()}else{if(st.cpu)dh=st.cpu;else[dh,ct]=c.t=='sets'?rSE():c.t=='sp'?rSP():rFZ();
+  if(st.res)ct=`<div class="res ${st.res.v?'':'bad'}">${st.res.msg?st.res.msg+'<br>':''}<b>${st.res.v} Punkte</b></div><button onclick="nx()">Weiter</button>`}
+ a.innerHTML=`${ban(KO?rname(KO.A.length):'')}<div class="rule">${c.r}</div>`+board(p)+`<div class="card"><div class="who">${E(P[p].name)} <small>${!jm&&A>1?'· Versuch '+(q[qi][1]+1)+'/'+A+' · ':'· '}bisher ${best[p]}</small></div>${dh}${ct}</div>`+table()}
+render();
+</script></body></html>
